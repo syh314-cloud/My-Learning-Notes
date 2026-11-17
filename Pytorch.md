@@ -160,12 +160,14 @@ self.second = nn.Linear(4, 1)
 
 `model.parameters()` 收集的参数共包含 **4 + 4 + 4 + 1 = 13 个数值**。
 
-### 7.4 内置损失函数与五行训练循环
+### 7.4 内置损失函数
 
 ```python
 loss_fn = nn.MSELoss()
 loss = loss_fn(pred, f)
 ```
+
+### 7.5 五行训练循环
 
 ```python
 for step in range(1000):
@@ -178,7 +180,7 @@ for step in range(1000):
 
 ![图 9：手动计算与五行训练循环总结](assets/pytorch/09.png)
 
-### 7.5 保存与加载模型
+### 7.6 保存与加载模型
 
 ```python
 torch.save(model.state_dict(), "fare_model.pt")
@@ -188,7 +190,7 @@ copy.load_state_dict(torch.load("fare_model.pt"))
 print(copy.state_dict())
 ```
 
-### 7.6 Epochs 与 Batch
+### 7.7 Epochs 与 Batch
 
 ![图 10：按批次训练](assets/pytorch/10.png)
 
