@@ -224,6 +224,40 @@ $$
 
 > ⭐ **大模型训练常用它。**
 
+### 3.8 L2 正则化与 Weight Decay 在 SGD 中的等价推导
+
+使用 L2 正则化，在 Loss 中加入：
+
+$$
+\frac{\lambda}{2}w^2
+$$
+
+对其求导：
+
+$$
+\frac{\partial}{\partial w}\left(\frac{\lambda}{2}w^2\right) = \lambda w
+$$
+
+所以总梯度变成：
+
+$$
+g_{\text{total}} = g + \lambda w
+$$
+
+SGD 更新：
+
+$$
+w_{\text{new}} = w - \eta(g + \lambda w)
+$$
+
+把括号展开：
+
+$$
+\boxed{w_{\text{new}} = (1-\eta\lambda)w - \eta g}
+$$
+
+**和单独做对应的权重衰减，最终可以完全等价。**
+
 ---
 
 ## 4. 对抗机器学习
