@@ -213,7 +213,7 @@ $$
 
 ### 9.3 Post-LN 与 Pre-LN
 
-![图 2：Post-LN 与 Pre-LN 结构对比](assets/transformer/post-ln-vs-pre-ln.png)
+<img src="assets/transformer/post-ln-vs-pre-ln.png" alt="图 2：Post-LN 与 Pre-LN 结构对比" width="650">
 
 #### 9.3.1 Post-LN：先计算，最后归一化
 
@@ -231,7 +231,7 @@ $$
 
 **选择**：Pre-LN 更有利于梯度传播，因为保留了一个直接的恒等残差路径，利于深层大模型。
 
-![图 1：Pre-LN 保留恒等残差路径，有利于梯度传播](assets/transformer/pre-ln-gradient-path.png)
+<img src="assets/transformer/pre-ln-gradient-path.png" alt="图 1：Pre-LN 保留恒等残差路径，有利于梯度传播" width="500">
 
 ### 9.4 RMSNorm
 
