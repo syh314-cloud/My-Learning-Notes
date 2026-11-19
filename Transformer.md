@@ -238,3 +238,32 @@ $$
 - 去掉均值 $\mu$ 的中心化。
 - **RMSNorm 计算更少，训练和推理都更便宜。**
 - 在深层 Transformer 中，最关键的是**控制向量尺度**，而不是强制均值为 0。
+
+## 10. MoE 混合专家模型
+
+### 10.1 原理与目的
+
+模型内部设置多个**专家网络（Experts）**，但每个 Token 通常只调用少数几个专家参与计算。
+
+**目的**：在增加模型总参数量的同时，控制每个 Token 实际使用的计算量。
+
+MoE 将一套 FFN 替换成多个专家 FFN，并加入 **Router（路由器）**，实现**稀疏激活**。
+
+<img src="assets/transformer/moe-routing.png" alt="图 1：Router 选择少数专家参与计算，并加权合并输出" width="650">
+
+### 10.2 Router
+
+Router 是一个**可学习的路由网络**，它会为每个 Token 计算不同专家的选择分数。
+
+### 10.3 为什么 MoE 需要 Load Balancing（负载均衡）？
+
+![图 2：路由不均衡的示例](assets/transformer/moe-load-imbalance.png)
+
+**几个问题（专家坍缩）：**
+
+- Expert 1 太忙，可能形成计算瓶颈。
+- Expert 4 几乎没有训练机会，难以学习有用的表示。
+- 如果专家分布在不同 GPU 上，某些 GPU 会很忙，另一些却处于空闲状态。
+- 整体训练和推理效率可能下降。
+
+![图 3：负载均衡及路由稳定性的相关方法](assets/transformer/moe-balancing-methods.png)
