@@ -108,7 +108,7 @@ GPU 算力很猛，但显存带宽跟不上。Attention 计算里大量时间花
 
 <img src="assets/transformer/attention-memory-bandwidth.png" alt="图 1：Attention 的访存带宽瓶颈" width="750">
 
-### 4.5 三类优化
+### 4.5 注意力优化
 
 #### 4.5.1 MQA（多查询注意力）
 
@@ -136,6 +136,19 @@ GPU 的存储分两层：
 **难题**：Softmax 要看整行，不能局部独立计算。
 
 **解决方法**：用在线 Softmax 算法，分块维护当前最大值和累积和的状态，做增量更新。
+
+#### 4.5.4 Prompt Caching
+
+**解决不同请求之间的重复计算。**
+
+如果两个请求的 Prompt 前缀完全相同（比如都用同样的 System Prompt），第一个请求算完的 KV Cache 在 API 服务器上保留下来，第二个请求遇到相同前缀直接跳过计算、复用已有 KV Cache，只算新增的部分。
+
+是 KV Cache 在“**时间维度**”的延伸：
+
+| 缓存方式 | 共享范围 |
+| :--- | :--- |
+| **单次请求内的 KV Cache** | 在 Token 之间共享 |
+| **Prompt Caching** | 在请求之间共享 |
 
 ## 5. Positional Encoding
 
