@@ -191,3 +191,50 @@ $$
 ![SwiGLU：门控分支与内容分支逐元素相乘后进行降维投影](assets/transformer/swiglu.png)
 
 > **优势**：门控机制让模型动态选择激活哪些特征。
+
+## 9. Layer Norm 和 RMS Norm
+
+### 9.1 为什么需要归一化层？
+
+如果不控制尺度：
+
+- 激活值可能随层数变大或变小。
+- Softmax logits 可能过大，导致梯度饱和。
+- 残差路径和子层输出尺度不匹配。
+
+### 9.2 LayerNorm vs BatchNorm
+
+| 方法 | 归一化方式 |
+| :--- | :--- |
+| **LayerNorm** | 按 Token 独立归一化，不依赖 Batch 里的其他样本 |
+| **BatchNorm** | 按 Batch 归一化 |
+
+**LLM 常用 LayerNorm**，文本序列长度可变。
+
+### 9.3 Post-LN 与 Pre-LN
+
+![图 2：Post-LN 与 Pre-LN 结构对比](assets/transformer/post-ln-vs-pre-ln.png)
+
+#### 9.3.1 Post-LN：先计算，最后归一化
+
+$$
+\boxed{y = \operatorname{LN}(x + F(x))}
+$$
+
+$F$ 可以表示一个 Self-Attention 子层，也可以表示 FFN 子层。
+
+#### 9.3.2 Pre-LN：先归一化，再计算
+
+$$
+\boxed{y = x + F(\operatorname{LN}(x))}
+$$
+
+**选择**：Pre-LN 更有利于梯度传播，因为保留了一个直接的恒等残差路径，利于深层大模型。
+
+![图 1：Pre-LN 保留恒等残差路径，有利于梯度传播](assets/transformer/pre-ln-gradient-path.png)
+
+### 9.4 RMSNorm
+
+- 去掉均值 $\mu$ 的中心化。
+- **RMSNorm 计算更少，训练和推理都更便宜。**
+- 在深层 Transformer 中，最关键的是**控制向量尺度**，而不是强制均值为 0。
