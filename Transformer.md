@@ -144,3 +144,50 @@ Token 越多，计算量平方级增长。
 Decoder-Only 模型生成 Token 是一个一个来的，第 N 个 Token 必须等前 N−1 个 Token 生成完。
 
 > **并行的是计算，串行的是生成顺序。**
+
+## 8. FFN
+
+**Attention 负责 Token 间通信，FFN 负责每个 Token 自身的非线性特征变换和容量扩展。**
+
+### 8.1 原始 FFN 公式
+
+逐 Token 独立计算：
+
+$$
+\operatorname{FFN}(x) = W_2\sigma(W_1x+b_1)+b_2
+$$
+
+其中：
+
+- **$W_1$**：$d_{\text{model}} \rightarrow d_{\text{ff}}$。
+- **$W_2$**：$d_{\text{ff}} \rightarrow d_{\text{model}}$。
+- **$d_{\text{ff}}$** 通常远大于 **$d_{\text{model}}$**。
+- **$\sigma$** 是激活函数。
+
+### 8.2 Hidden size 要扩张
+
+常见设置：
+
+$$
+d_{\text{ff}} \approx 4d_{\text{model}}
+$$
+
+**扩张的直觉：**
+
+1. 先把 Token 表示投影到更高维空间。
+2. 通过非线性激活选择、组合特征。
+3. 再压回原 Hidden size。
+
+### 8.3 激活函数：SwiGLU
+
+使用两个线性分支：**一条经过 SiLU 生成门控特征，再与另一条内容分支逐元素相乘**。
+
+$$
+\operatorname{SiLU}(xW_g) \odot (xW_u)
+$$
+
+门控分支使用的 **SiLU 输出不限制在 0～1 之间**，所以它不只是开关，还可能放大特征，甚至产生负值、改变符号，用来抑制、保留或增强另一组特征。
+
+![SwiGLU：门控分支与内容分支逐元素相乘后进行降维投影](assets/transformer/swiglu.png)
+
+> **优势**：门控机制让模型动态选择激活哪些特征。
