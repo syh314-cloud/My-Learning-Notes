@@ -154,7 +154,7 @@ Decoder-Only 模型生成 Token 是一个一个来的，第 N 个 Token 必须�
 逐 Token 独立计算：
 
 $$
-\operatorname{FFN}(x) = W_2\sigma(W_1x+b_1)+b_2
+\mathrm{FFN}(x) = W_2\sigma(W_1x+b_1)+b_2
 $$
 
 其中：
@@ -183,7 +183,7 @@ $$
 使用两个线性分支：**一条经过 SiLU 生成门控特征，再与另一条内容分支逐元素相乘**。
 
 $$
-\operatorname{SiLU}(xW_g) \odot (xW_u)
+\mathrm{SiLU}(xW_g) \odot (xW_u)
 $$
 
 门控分支使用的 **SiLU 输出不限制在 0～1 之间**，所以它不只是开关，还可能放大特征，甚至产生负值、改变符号，用来抑制、保留或增强另一组特征。
@@ -218,7 +218,7 @@ $$
 #### 9.3.1 Post-LN：先计算，最后归一化
 
 $$
-\boxed{y = \operatorname{LN}(x + F(x))}
+\boxed{y = \mathrm{LN}(x + F(x))}
 $$
 
 $F$ 可以表示一个 Self-Attention 子层，也可以表示 FFN 子层。
@@ -226,7 +226,7 @@ $F$ 可以表示一个 Self-Attention 子层，也可以表示 FFN 子层。
 #### 9.3.2 Pre-LN：先归一化，再计算
 
 $$
-\boxed{y = x + F(\operatorname{LN}(x))}
+\boxed{y = x + F(\mathrm{LN}(x))}
 $$
 
 **选择**：Pre-LN 更有利于梯度传播，因为保留了一个直接的恒等残差路径，利于深层大模型。
