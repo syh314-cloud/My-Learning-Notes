@@ -133,7 +133,7 @@ Token 越多，计算量平方级增长。
 
 - **RoPE（旋转位置编码）**：相对距离模式在训练中见过，模型就更容易复用。
 
-![图 3：RoPE 用旋转编码相对位置](assets/transformer/rope.png)
+<img src="assets/transformer/rope.png" alt="图 3：RoPE 用旋转编码相对位置" width="650">
 
 - **滑动窗口注意力**：每个 Token 只在局部窗口内做注意力，序列再长，单个 Token 需要处理的最大相对距离也被限制在窗口内。
 
