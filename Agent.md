@@ -154,6 +154,12 @@ LangChain、LlamaIndex 这些框架把 Agent 的开发门槛大幅降低了。
 
 <img src="assets/agent/graph-of-thoughts.png" alt="图 2：从 ToT 到 GoT，中间结论可以合并与复用" width="750">
 
+**总结：**
+
+- **CoT**：用得最多，因为实现成本最低，就是改个 Prompt。
+- **ToT**：效果更好，但调用次数多，成本大概是 3 到 5 倍。
+- **GoT**：目前还比较学术，生产环境没见过有人真正落地用的。
+
 ### 4.5 总结
 
 > **规划 → 决策 → 执行 → 记忆 → 再决策。**
